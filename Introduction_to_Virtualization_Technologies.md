@@ -10,7 +10,7 @@ This approach had several downfalls:
   - big costs
 
 
-![IMG]()
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/pre_virtualization.png)
 
 ### Hypervisor virtualization
 To address this limitation Hypervisor-based Virtualization was introduced.
@@ -26,7 +26,7 @@ Limitations:
   - Kernel Resource Duplication
   - Application Portability Issue
 
-![IMG]()
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/hypervisor.png)
 
 ### Container based Virtualization
 
@@ -35,7 +35,7 @@ The Container Engine level. In Hypervisor mode virtualization happens at hardwar
 For the container based level there will be one Kernel used.
 Within a container only the specific application binaries/libraries will be used, no extra needed software, not OS
 
-![IMG]()
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/hyper_vs_container.png)
 
 ### Docker
-![IMG]()
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/container_virt.png)
