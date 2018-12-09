@@ -14,7 +14,7 @@ This approach had several downfalls:
 
 ### Hypervisor virtualization
 To address this limitation Hypervisor-based Virtualization was introduced.
-Each application was deployed within a Virtual Machine(VM) with it's own operation system(OS).
+Each application was deployed within a Virtual Machine(VM) with it's own operation system(OS), memory, CPU, storage etc.
 Still each application had to have it's own kernel. While this approach was
 better it still had some limitations as it lacked full portability.
 
@@ -30,10 +30,10 @@ Limitations:
 
 ### Container based Virtualization
 
-Container based virtualization addresses the former limitations. This type of virtualization introduces another abstract level,
-The Container Engine level. In Hypervisor mode virtualization happens at hardware level, and for the new level the virtualization happens at OS level.
-For the container based level there will be one Kernel used.
-Within a container only the specific application binaries/libraries will be used, no extra needed software, not OS
+Container based virtualization addresses the hypervisor based virtualization. This type of virtualization introduces another abstract level,
+The Container Engine level. In Hypervisor mode virtualization happens at hardware level, and for the container based, the virtualization happens at OS level.
+One kernel will be used among different containers.
+Within a container only the specific application binaries/libraries will be used, no extra software, no OS.
 
 ![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/hyper_vs_container.png)
 
