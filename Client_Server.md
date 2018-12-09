@@ -10,6 +10,7 @@ In terms of clients we can either user Linux shell based on various guys.
 ### Docker concepts
 
 Images:
+
   • Images are read only templates used to create containers.
   • Images are created with the docker build command, either
 by us or by other docker users.
@@ -17,6 +18,7 @@ by us or by other docker users.
   • Images are stored in a Docker registry.
 
 Containers:
+
   • If an image is a class, then a container is an instance of a
 class - a runtime object.
   • Containers are lightweight and portable encapsulations of
@@ -28,6 +30,7 @@ application.
 ![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/images_containers.jpg)
 
 Registries and Repositories:
+
   • A registry is where we store our images.
   • You can host your own registry, or you can use Docker’s
 public registry which is called `DockerHub`.
