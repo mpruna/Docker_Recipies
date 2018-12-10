@@ -148,3 +148,21 @@ Removing intermediate container ce52a31b05e2
 Successfully built 612bb4a71047
 Successfully tagged mpruna/debian:latest
 ```
+
+### Docker chain RUN instructions:
+
+ - Each RUN command will execute the command on the top writable layer of the container, then commit the container as a new image.
+ - The new image is used for the next step in the Dockerfile. So each RUN instruction will create a new image layer.
+ - It is recommended to chain the RUN instructions in the Dockerfile to reduce the number of image layers it creates.
+ 
+It is recommended to chain the RUN instructions in Dockerfile to reduce the number of image layers it creates.
+Instead of having 3 instructions, we will do apt-get update and ap-get install git and vim to aggregate those three instructions into one.
+By editing the Dockerfile we have only two build steps instead of four, which means it is only adding one more
+layer on top of the base image instead of three.
+
+```
+FROM debian:latest
+RUN apt-get update && apt-get install -y \
+    git \
+    nano
+```
