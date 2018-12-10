@@ -149,6 +149,7 @@ Successfully built 612bb4a71047
 Successfully tagged mpruna/debian:latest
 ```
 
+<<<<<<< HEAD
 Docker COPY and ADD
 
 The COPY instruction copies new files or directories from build context and adds them to the file system of the container.
@@ -234,3 +235,129 @@ path in the container's filesystem.
 ### Docker integration:
 
 ![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/integration.png)
+=======
+### Docker chain RUN instructions:
+
+ - Each RUN command will execute the command on the top writable layer of the container, then commit the container as a new image.
+ - The new image is used for the next step in the Dockerfile. So each RUN instruction will create a new image layer.
+ - It is recommended to chain the RUN instructions in the Dockerfile to reduce the number of image layers it creates.
+ 
+It is recommended to chain the RUN instructions in Dockerfile to reduce the number of image layers it creates.
+Instead of having 3 instructions, we will do apt-get update and ap-get install git and vim to aggregate those three instructions into one.
+By editing the Dockerfile we have only two build steps instead of four, which means it is only adding one more
+layer on top of the base image instead of three.
+
+```
+FROM debian:latest
+RUN apt-get update && apt-get install -y \
+    git \
+    nano
+```
+
+Docker run the new Dockerfile
+
+```
+docker build -t mpruna/debian .
+Sending build context to Docker daemon  3.014MB
+Step 1/2 : FROM debian:latest
+latest: Pulling from library/debian
+54f7e8ac135a: Pull complete
+Digest: sha256:df6ebd5e9c87d0d7381360209f3a05c62981b5c2a3ec94228da4082ba07c4f05
+Status: Downloaded newer image for debian:latest
+ ---> 4879790bd60d
+Step 2/2 : RUN apt-get update && apt-get install -y     git     nano
+ ---> Running in ab785a270c7f
+ Removing intermediate container ab785a270c7f
+ ---> 744f8cfd728b
+Successfully built 744f8cfd728b
+Successfully tagged mpruna/debian:latest
+ ```
+ 
+ Another good practice is to add packages/library alphanumerically so we avoid duplication.
+ 
+### CMD Instructions: 
+
+ - CMD instruction specifies what command you want to run when the container starts up.
+ - If we don't specify CMD instruction in the Dockerfile, Docker will use the default command defined in the base image.
+ - The CMD instruction doesn’t run when building the image, it only runs when the container starts up.
+ - You can specify the command in either exec form which is preferred or in shell form.
+ - By default when a container starts it also spawn a `bash shell`
+ 
+This can be exemplified appending a different cmd
+ 
+```
+FROM debian:latest
+RUN apt-get update && apt-get install -y \
+    git \
+    nano
+CMD ["echo","hello world!"]
+``` 
+
+docker build -t mpruna/debian .
+
+```
+Sending build context to Docker daemon  3.015MB
+Step 1/3 : FROM debian:latest
+ ---> 4879790bd60d
+Step 2/3 : RUN apt-get update && apt-get install -y     git     nano
+ ---> Using cache
+ ---> 744f8cfd728b
+Step 3/3 : CMD ["echo","hello world!"]
+ ---> Running in fa22799bb2bc
+Removing intermediate container fa22799bb2bc
+ ---> 0d7454cad615
+Successfully built 0d7454cad615
+Successfully tagged mpruna/debian:latest
+```
+
+Run container:
+
+```
+docker run 0d7454cad615
+hello world!
+```
+
+Also default docker container run instruction can be overwritten if we choose a different command.
+
+```
+docker run 0d7454cad615 echo "hello docker!"
+hello docker!
+```
+
+### Docker Cache:
+
+ - Each time Docker executes an instruction it builds a new image layer.
+ - The next time, if the instruction doesn't change, Docker will simply reuse the existing layer, as seen in the previously when we update the Dockerfile.
+
+If the same instruction is seen in a Dockerfile docker-engine interprets the previous command as being
+executed and it will not execute it one more time. This can cause problems as for subsequent packet installs might require an update.
+Solution would be do chain the commands
+
+### Aggresive cacheing
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/aggresive_cache.png)
+
+### Chain instruction
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/chain_solution.png)
+
+Also `--no-cache=True` command can be used to invalidate this behavior
+
+```
+docker build -t mpruna/debian . --no-cache=True
+Sending build context to Docker daemon  3.263MB
+Step 1/3 : FROM debian:latest
+ ---> 4879790bd60d
+Step 2/3 : RUN apt-get update && apt-get install -y     git     nano
+ ---> Running in 3f817a9dd129
+
+Running hooks in /etc/ca-certificates/update.d...
+done.
+Removing intermediate container 3f817a9dd129
+ ---> 67c379c9de7b
+Step 3/3 : CMD ["echo","hello world!"]
+ ---> Running in 81ba19ec1e42
+Removing intermediate container 81ba19ec1e42
+ ---> c68f737959a7
+Successfully built c68f737959a7
+Successfully tagged mpruna/debian:latest
+```
+>>>>>>> 35e8c29df58c0d8795e87d4cd724a4c9a7f5aa3b
