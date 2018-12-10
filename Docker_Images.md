@@ -148,3 +148,89 @@ Removing intermediate container ce52a31b05e2
 Successfully built 612bb4a71047
 Successfully tagged mpruna/debian:latest
 ```
+
+Docker COPY and ADD
+
+The COPY instruction copies new files or directories from build context and adds them to the file system of the container.
+
+```
+echo "Welcome Home" >> text.txt
+```
+
+Dockerfile includes COPY `cmd`:
+
+```
+FROM debian:latest
+RUN apt-get update && apt-get install -y \
+	git\
+	nano
+COPY text.txt /home/test.txt
+```
+
+Build a container:
+
+```
+docker build -t mpruna/debian .
+Sending build context to Docker daemon  10.03MB
+Step 1/3 : FROM debian:latest
+ ---> be2868bebaba
+Step 2/3 : RUN apt-get update && apt-get install -y 	git	nano
+ ---> Running in 6af1280f6285
+
+ Running hooks in /etc/ca-certificates/update.d...
+ done.
+ Removing intermediate container 6af1280f6285
+  ---> 8f6b8efc02f1
+ Step 3/3 : COPY text.txt /home/test.txt
+  ---> e1b82b13368a
+ Successfully built e1b82b13368a
+ Successfully tagged mpruna/debian:latest
+```
+
+Check `test.txt` is in `/home` directory
+
+```
+docker run -it --name debian_latest mpruna/debian
+root@9716fad24def:/# cd /home/
+root@9716fad24def:/home# ls -ltr
+total 4
+-rw-r--r-- 1 root root 13 Dec 10 16:39 test.txt
+root@9716fad24def:/home#
+```
+
+ADD allows you to download a file from internet and copy to the container. ADD also has the ability to automatically
+unpack compressed files. If the src argument is a local file in a recognized compression format then it is unpacked at the specified dest
+path in the container's filesystem.
+
+### Push an image to Docker Hub
+
+  1. First, we must create a [Docker Hub](https://hub.docker.com/) account.
+  2. Tag one of the images we want to push. We should avoid naming an image with latest. This is just a naming convention but it's not enforced. Images tagged latest will not be updated automatically when a new version is pushed to the repository.
+
+     ```
+     docker tag e1b82b13368a praslea/debian:1.01
+
+     REPOSITORY              TAG                 IMAGE ID            CREATED             SIZE
+     debian                  jessie              39db55273026        3 weeks ago         127MB
+     praslea/debian          1.01                39db55273026        3 weeks ago         127MB
+     ```
+  3. Log in to Docker hub:
+    ```
+    docker login --username=praslea
+    Login Succeeded
+    ```
+  4. Push the image:
+    ```
+    docker push praslea/debian:1.01
+    The push refers to repository [docker.io/praslea/debian]
+    2eccc496e148: Mounted from library/debian
+    1.01: digest: sha256:3eccaca582cda1523b94e8451100fccfc9a0b2b1d09936f48250d51318e3948f size: 529
+    ```
+
+### Image present on Docker Hub:
+
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/docker_hub_push.png)
+
+### Docker integration:
+
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/integration.png)
