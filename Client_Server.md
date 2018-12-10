@@ -220,7 +220,7 @@ b9df0c24315e: Pull complete
 10-Dec-2018 03:51:33.933 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in 1250 ms
 ```
 
-![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/x-special/tomcat.png)
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/tomcat.png)
 
 View docker logs:
 
