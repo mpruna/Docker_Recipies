@@ -92,3 +92,59 @@ Deleted: sha256:47bcc53f74dc94b1920f0b34f6036096526296767650f223433fe65c35f149eb
 Deleted: sha256:f6075681a244e9df4ab126bce921292673c9f37f71b20f6be1dd3bb99b4fdd72
 Deleted: sha256:1834950e52ce4d5a88a1bbd131c537f4d0e56d10ff0dd69e66be3b7dfa9df7e6
 ```
+
+### Build images using docker files
+
+Dockerfile and Instructions:
+  - A Dockerfile is a text document that contains all the
+instructions users provide to assemble an image.
+  - Each instruction will create a new image layer to the image.
+  - Instructions specify what to do when building the image.
+
+Docker Build Context
+  - Docker build command takes the path to the build context as an argument.
+  - When build starts, docker client would pack all the files in the build context into a tarball then transfer the tarball file to the daemon.
+  - By default, docker would search for the.Dockerfile in the build context path.
+
+Creating a Dockerfile with instructions. Dockerfile must not have an extension. Although the commands are case-insensitive,
+we use capital letter to specify the command and small letter as arguments. `FROM` tells which docker image to fetch and `RUN`
+are Linux commands that will be executed.
+
+```
+nano Dockerfile
+
+FROM debian:latest
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get install git -y
+RUN apt-get install vim -y
+RUN apt-get install nano -y
+```
+
+Build docker image from local file. `-t` tags the image and `.` sets the context to local/current directory.
+As we mentioned before, now the Docker client is transferring the all the files inside the build
+context which is my current folder from the local machine to the Docker daemon. Then instructions are executed
+
+```
+docker build -t mpruna/debian .
+Sending build context to Docker daemon  10.02MB
+Step 1/5 : FROM debian:latest
+ ---> be2868bebaba
+Step 2/5 : RUN apt-get update && apt-get upgrade -y
+ ---> Running in deea5a1e22d2
+Removing intermediate container deea5a1e22d2
+---> 62796d978db6
+Step 3/5 : RUN apt-get install git -y
+---> Running in 339b252eb98b
+Removing intermediate container 339b252eb98b
+---> 96ca7cd22921
+Step 4/5 : RUN apt-get install vim -y
+---> Running in 1810fbc975d7
+Removing intermediate container 1810fbc975d7
+---> 0b8c03b0f865
+Step 5/5 : RUN apt-get install nano -y
+---> Running in ce52a31b05e2
+Removing intermediate container ce52a31b05e2
+ ---> 612bb4a71047
+Successfully built 612bb4a71047
+Successfully tagged mpruna/debian:latest
+```
