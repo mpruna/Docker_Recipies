@@ -27,8 +27,8 @@ total 8
 drwxr-xr-x 2 root root 4096 Dec 10 20:04 app
 cd app
 ```
-View app folder:
-cat app.py
+View app folder the `app.py` script:
+
 ```
 from flask import Flask  #<---First two lines import flask
 app = Flask(__name__)
@@ -70,3 +70,31 @@ Successfully tagged dockerapp:v0.1
 ```
 
 ![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/docker_build.png)
+
+
+Run docker container in the background mapping 5000 internal port to 5000 external.
+
+```
+docker run  --name flask_app -d -p 5000:5000 907fcaa51dd3
+46c7a905f1e6afea0c8e5d8b7963d3dd348f6ba6f4786933b25bcf17eb0ef568
+```
+### Web Access to Python app
+![IMG]https://github.com/mpruna/Docker_Recipies/blob/master/images/http_Flask.png)
+
+
+Let run a command in a running container by using `exec`:
+
+```
+docker exec -it flask_app bash
+admin@46c7a905f1e6:/app$
+```
+
+See inside container that admin user is running the python app:
+
+```
+ps -ef
+UID        PID  PPID  C STIME TTY          TIME CMD
+admin        1     0  0 02:57 ?        00:00:00 python app.py
+admin        9     0  0 03:12 pts/0    00:00:00 bash
+admin       19     9  0 03:13 pts/0    00:00:00 ps -ef
+```
