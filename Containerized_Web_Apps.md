@@ -98,3 +98,32 @@ admin        1     0  0 02:57 ?        00:00:00 python app.py
 admin        9     0  0 03:12 pts/0    00:00:00 bash
 admin       19     9  0 03:13 pts/0    00:00:00 ps -ef
 ```
+
+### Implement a key-value pair system:
+
+We use [git stash](https://git-scm.com/book/en/v1/Git-Tools-Stashing) to track the  modified files and staged changes — and saves it on a stack of unfinished changes that you can reapply at any time. This comes in handy when we want to switch branches for a bit to work on something else.
+[git checkout <branch>](https://git-scm.com/docs/git-checkout) To prepare for working on `<branch>`, switch to it by updating the index and the files in the working tree, and by pointing HEAD at the branch.
+
+Switch to the directory where downloaded the project app:
+
+```
+pwd
+/home/Github_projects/Docker_Recipies/dockerapp
+```
+
+Stash an checkout:
+
+```
+git stash && git checkout v0.2
+No local changes to save
+Previous HEAD position was 905df5b initial commit
+HEAD is now at 81b086a simple key value lookup
+```
+
+### Check HTML layout for new app:
+
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/index_html.png)
+
+### New Flask app:
+
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/flask_key_value.png)
