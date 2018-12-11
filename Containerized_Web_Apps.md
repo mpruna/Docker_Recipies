@@ -79,7 +79,7 @@ docker run  --name flask_app -d -p 5000:5000 907fcaa51dd3
 46c7a905f1e6afea0c8e5d8b7963d3dd348f6ba6f4786933b25bcf17eb0ef568
 ```
 ### Web Access to Python app
-![IMG]https://github.com/mpruna/Docker_Recipies/blob/master/images/http_Flask.png)
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/http_Flask.png)
 
 
 Let run a command in a running container by using `exec`:
