@@ -167,4 +167,73 @@ Return key-value in HTML page:
 
 ```
 return render_template('index.html', key=key, cache_value=cache_value)
-```  
+```
+
+Rebuild the image:
+
+```
+docker build -t dokerapp:v0.2 .
+Sending build context to Docker daemon  80.38kB
+Step 1/7 : FROM python:3.5
+ ---> ffc8b495cd26
+Step 2/7 : RUN pip install Flask==0.11.1
+ ---> Using cache
+ ---> b3b59aa548b9
+Step 3/7 : RUN useradd -ms /bin/bash admin
+ ---> Using cache
+ ---> a89afc108e6b
+Step 4/7 : USER admin
+ ---> Using cache
+ ---> f276229aa1ed
+Step 5/7 : WORKDIR /app
+ ---> Using cache
+ ---> a88d4b670ed5
+Step 6/7 : COPY app /app
+ ---> e9a83de14b18
+Step 7/7 : CMD ["python", "app.py"]
+ ---> Running in c68417b83d41
+Removing intermediate container c68417b83d41
+ ---> 6dd19e7b493d
+Successfully built 6dd19e7b493d
+Successfully tagged dokerapp:v0.2
+```
+
+Startup a container also name the container `key_value.app`:
+
+```
+docker run --name key_value.app -d -p 5000:5000 6dd19e7b493d
+91d29e3c41bcfe6966bf0d87b5b5dd74546e9166e3d2f89e67fb6668770f88e7  
+```
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/key_value_app.png)
+
+So far our applications where built in one container, next we will explore how to develop an application across multiple containers and link them togather.
+We will use `redis` in memory db. [Redis](https://redis.io/) Redis is an open source (BSD licensed), in-memory data structure store, used as a database, cache and message broker.
+Redis has built-in replication and different levels of disk-persistence.
+Used in time critical applications such as twitter Timeline and Facebook News Feed.
+
+We must perform some modification in previous `app.py` and add `python-redis` `apis` and methods.
+Below we see the differences:
+
+  <  removed line
+  >  added line
+
+```
+diff app.py app_redis.py
+1a2
+> import redis
+5c6,7
+< cache = {default_key: 'one'}
+---
+> cache=redis.StrictRedis(host='localhost', port=6379, db=0)
+> cache.set(default_key: 'one')
+15c17
+< 		cache[key] = request.form['cache_value']
+---
+> 		cache.set(key, request.form['cache_value'])
+18,19c20,21
+< 	if key in cache:
+< 		cache_value = cache[key]
+---
+> 	if cache.get(key):
+> 		cache_value = cache.get(key).decode('utf-8')
+```
