@@ -207,15 +207,16 @@ docker run --name key_value.app -d -p 5000:5000 6dd19e7b493d
 ![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/key_value_app.png)
 
 So far our applications where built in one container, next we will explore how to develop an application across multiple containers and link them togather.
-We will use `redis` in memory db. [Redis](https://redis.io/) Redis is an open source (BSD licensed), in-memory data structure store, used as a database, cache and message broker.
+We will use `redis` in memory db. [Redis](https://redis.io/) is an open source (BSD licensed), in-memory data structure store, used as a database, cache and message broker.
 Redis has built-in replication and different levels of disk-persistence.
 Used in time critical applications such as twitter Timeline and Facebook News Feed.
 
 We must perform some modification in previous `app.py` and add `python-redis` `apis` and methods.
 Below we see the differences:
-
+```
   <  removed line
   >  added line
+```
 
 ```
 diff app.py app_redis.py
