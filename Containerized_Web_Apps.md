@@ -124,6 +124,47 @@ HEAD is now at 81b086a simple key value lookup
 
 ![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/index_html.png)
 
+Input text fields in the web app referencing variables defined in the controller `app.py`:
+```
+<input type="text" name="key" value={{ key }}>
+<input type="text" name="cache_value" value={{ cache_value }}>
+```
+Load & save buttons:
+
+```
+<input type="submit" name="submit" value="load">
+<input type="submit" name="submit" value="save">
+```
+
 ### New Flask app:
 
 ![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/flask_key_value.png)
+
+Register URL for GET and POST HTTP:
+```
+@app.route('/', methods=['GET', 'POST'])
+def mainpage():
+```
+If user specifies a key add it to the `key` variable
+```
+if 'key' in request.form:
+    key = request.form['key']
+```
+Save key-value pair in dictionary:
+```
+if request.method == 'POST' and request.form['submit'] == 'save':
+  cache[key] = request.form['cache_value']
+```
+
+Key-Value pair lookup:
+```
+cache_value = None;
+if key in cache:
+  cache_value = cache[key]    
+```
+
+Return key-value in HTML page:
+
+```
+return render_template('index.html', key=key, cache_value=cache_value)
+```  
