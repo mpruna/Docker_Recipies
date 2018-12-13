@@ -293,10 +293,61 @@ docker run -d -p 5000:5000 --name appv3 --link redis dockerapp:v0.3
 Check if redis & app container are up and running:
 
 ```      
-docker ps -a
-CONTAINER ID        IMAGE                  COMMAND                  CREATED             STATUS                           PORTS                                              NAMES
-311915ce51e1        dockerapp:v0.3         "python app.py"          3 seconds ago       Up 3 seconds                     0.0.0.0:5000->5000/tcp                             recursing_bassi
-bff820edf4f1        redis:3.2.0            "docker-entrypoint.s…"   44 minutes ago      Up 31 minutes                    6379/tcp                                           redis
+d docker ps
+CONTAINER ID        IMAGE                  COMMAND                  CREATED             STATUS              PORTS                                              NAMES
+90b8ddc4df72        dockerapp:v0.3         "python app.py"          28 seconds ago      Up 27 seconds       0.0.0.0:5000->5000/tcp                             determined_boyd
+9ee3407da1a5        dockerapp:v0.3         "python app.py"          8 minutes ago       Up 7 minutes                                                           appv0.3
+bff820edf4f1        redis:3.2.0            "docker-entrypoint.s…"   2 hours ago         Up 10 minutes       6379/tcp                                           redis
+5e8b2c5fe1e3        elasticsearch:latest   "/docker-entrypoint.…"   3 weeks ago         Up 10 minutes       0.0.0.0:32769->9200/tcp, 0.0.0.0:32768->9300/tcp   brave_bartik
+a8b35e1d2b96        portainer/portainer    "/portainer"             4 months ago        Up 10 minutes       0.0.0.0:9000->9000/tcp                             portainer
+redis
 ```
 
 ![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/key_value_links.png)
+
+Check how container are linked. First we log onto appv0.3 and examine `/etc/hosts`. We will notice an entry with an ip for the redis container:
+
+```
+cat /etc/hosts
+127.0.0.1	localhost
+::1	localhost ip6-localhost ip6-loopback
+fe00::0	ip6-localnet
+ff00::0	ip6-mcastprefix
+ff02::1	ip6-allnodes
+ff02::2	ip6-allrouters
+172.17.0.4	redis bff820edf4f1
+172.17.0.6	90b8ddc4df72
+```
+
+Cross check with `redis` app by doing an inspect and search for IPAddress:
+
+```
+docker inspect redis | grep IPAddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "172.17.0.4",
+                    "IPAddress": "172.17.0.4",
+```
+
+Ping from app to `redis`:
+
+```
+docker exec -it determined_boyd bash
+admin@90b8ddc4df72:/app$ ping redis
+PING redis (172.17.0.4) 56(84) bytes of data.
+64 bytes from redis (172.17.0.4): icmp_seq=1 ttl=64 time=0.125 ms
+64 bytes from redis (172.17.0.4): icmp_seq=2 ttl=64 time=0.098 ms
+64 bytes from redis (172.17.0.4): icmp_seq=3 ttl=64 time=0.139 ms
+64 bytes from redis (172.17.0.4): icmp_seq=4 ttl=64 time=0.154 ms
+^C
+--- redis ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3068ms
+rtt min/avg/max/mdev = 0.098/0.129/0.154/0.020 ms
+```  
+
+### Benefits of Docker Container Links
+
+  - The main use for docker container links is when we build an
+application with a microservice architecture, we are able to
+run many independent components in different containers.
+  - Docker creates a secure tunnel between the containers that
+doesn’t need to expose any ports externally on the container.
