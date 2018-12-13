@@ -213,6 +213,7 @@ Used in time critical applications such as twitter Timeline and Facebook News Fe
 
 We must perform some modification in previous `app.py` and add `python-redis` `apis` and methods.
 Below we see the differences:
+
 ```
   <  removed line
   >  added line
@@ -238,3 +239,64 @@ diff app.py app_redis.py
 > 	if cache.get(key):
 > 		cache_value = cache.get(key).decode('utf-8')
 ```
+
+In Docker file we must specify `python-redis` library to Install:
+
+```
+FROM python:3.5
+RUN pip install Flask==0.11.1 redis==2.10.5
+```
+
+### Container Links
+
+Docker links work by establishing links between containers. In our particular case a link is established between `dockerapp` and `redis`.
+
+![IMg](https://github.com/mpruna/Docker_Recipies/blob/master/images/container_links.png)
+
+
+Install & run redis container:
+
+```
+docker run -d --name redis redis:3.2.0
+
+Digest: sha256:4b24131101fa0117bcaa18ac37055fffd9176aa1a240392bb8ea85e0be50f2ce
+Status: Downloaded newer image for redis:3.2.0
+bff820edf4f1b6470fada4a09765b638d41d3150a775c109687ea8986e199689
+```
+
+Build the new app and tag it with a new version `0.3`:
+
+```
+docker build -t dockerapp:v0.3 .
+Sending build context to Docker daemon  81.92kB
+Step 1/7 : FROM python:3.5
+---> ffc8b495cd26
+Step 2/7 : RUN pip install Flask==0.11.1 redis==2.10.5
+---> Running in d7a93edfc53d
+
+
+Step 7/7 : CMD ["python", "app.py"]
+ ---> Running in fe7a9167d74a
+Removing intermediate container fe7a9167d74a
+ ---> 4b476422d912
+Successfully built 4b476422d912
+Successfully tagged dockerapp:v0.3
+```
+
+Run `redis`, `dockerapp:v0.3` container linking them.
+
+```
+docker run -d -p 5000:5000 --name appv3 --link redis dockerapp:v0.3
+5e7d53314c474f7c481cdd18cc9d98ef886dd8a32829bd822a726906df0c3b51
+```
+
+Check if redis & app container are up and running:
+
+```      
+docker ps -a
+CONTAINER ID        IMAGE                  COMMAND                  CREATED             STATUS                           PORTS                                              NAMES
+311915ce51e1        dockerapp:v0.3         "python app.py"          3 seconds ago       Up 3 seconds                     0.0.0.0:5000->5000/tcp                             recursing_bassi
+bff820edf4f1        redis:3.2.0            "docker-entrypoint.s…"   44 minutes ago      Up 31 minutes                    6379/tcp                                           redis
+```
+
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/key_value_links.png)
