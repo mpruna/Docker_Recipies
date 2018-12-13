@@ -425,3 +425,30 @@ Step 1/7 : FROM python:3.5
 ```
 
 ![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/compose-up.png)
+
+### Docker compose benefits:
+
+  - Manual linking containers and configuring services become impractical when the number of containers grows.
+  - Docker compose is a very handy tool to quickly get docker
+environment up and running.
+  - Docker compose uses yaml files to store the configuration
+of all the containers, which removes the burden to maintain
+our scripts for docker orchestration.
+
+### Docker-compose commands:
+
+Command | Description
+- | -
+docker-compose up | starts up all the containers.
+docker-compose ps | checks the status of the containers managed by docker compose.
+docker-compose logs | outputs colored and aggregated logs for the compose-managed
+containers.
+docker-compose logs | with dash f option outputs appended log when the log grows.
+docker-compose logs | with the container name in the end outputs the logs of a specific
+container.
+docker-compose stop | stops all the running containers without removing them.
+docker-compose rm | removes all the containers.
+docker-compose build | rebuilds all the images.
+
+By default, docker compose up will only rebuild the image if the image doesn't exist.
+If we want to rebuild the image we need to use the docker compose build command, which will rebuild any images created from the docker files.
