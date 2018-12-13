@@ -45,7 +45,7 @@ Server: Docker Engine - Community
 
 ### Repository Structure:
 
-[Getting_Started_with_Docker]():
+[Getting_Started_with_Docker](https://github.com/mpruna/Docker_Recipies/tree/master/Getting_Started_with_Docker):
 
   - Introduction to virtualization technologies
   - Docker Client-Server architecture
