@@ -60,3 +60,8 @@ Server: Docker Engine - Community
   - Building docker images using `docker commit`
   - Build docker images based on Dockerfile
   - Push images to Docker Hub
+
+[Containerized Web Applications](https://github.com/mpruna/Docker_Recipies/tree/master/Containerized_Web_Applications)
+  - Containerize Web applications
+  - Create docker links between Containers
+  - Automate docker workflow with docker-composed
