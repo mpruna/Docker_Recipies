@@ -60,3 +60,7 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
        valid_lft forever preferred_lft forever
 / #
 ```
+
+### Docker bridged Network(Docker Default)
+
+Docker containers use `network bridge 0` to connect to outside world:
