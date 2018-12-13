@@ -351,3 +351,77 @@ application with a microservice architecture, we are able to
 run many independent components in different containers.
   - Docker creates a secure tunnel between the containers that
 doesn’t need to expose any ports externally on the container.
+
+### Automate workflow with docker compose:
+
+Specially when we must run an application that host multiple micro services it's impractical to start each container individually.
+For this case we use [Docker Compose](https://docs.docker.com/compose/overview/).
+Compose is a tool for defining and running multi-container Docker applications. With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration.
+
+### Install docker-compose:
+
+```
+sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   617    0   617    0     0   1148      0 --:--:-- --:--:-- --:--:--  1146
+100 11.1M  100 11.1M    0     0   736k      0  0:00:15  0:00:15 --:--:-- 1624k
+```
+
+Make docker-compose executable:
+
+```
+chmod +x /usr/local/bin/docker-compose
+```
+
+Check docker-compose version:
+
+```
+docker-compose version
+docker-compose version 1.23.1, build b02f1306
+docker-py version: 3.5.0
+CPython version: 3.6.7
+OpenSSL version: OpenSSL 1.1.0f  25 May 2017
+```
+
+Creating a docker-compose file
+
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/docker-compose.png)
+
+Docker Instructions | Description:
+- | -
+version | Specify docker version, latest is version 3
+services  | Defines micro services in our case python app and redis  
+build  | Specifies build path  
+ports  | exposes to outside internal port  
+depends_on  | specifies execution order, i.e first start redis, then app  
+image  | Build container based on img version, first try to find image locally
+
+Additional Compose reference [here](https://docs.docker.com/compose/compose-file/)
+
+Stop docker containers and star using docker-compose:
+
+```
+docker ps
+CONTAINER ID        IMAGE                  COMMAND                  CREATED             STATUS              PORTS                                              NAMES
+90b8ddc4df72        dockerapp:v0.3         "python app.py"          33 minutes ago      Up 33 minutes       0.0.0.0:5000->5000/tcp                             determined_boyd
+bff820edf4f1        redis:3.2.0            "docker-entrypoint.s…"   2 hours ago         Up 43 minutes       6379/tcp                                           redis
+5e8b2c5fe1e3        elasticsearch:latest   "/docker-entrypoint.…"   3 weeks ago         Up 43 minutes       0.0.0.0:32769->9200/tcp, 0.0.0.0:32768->9300/tcp   brave_bartik
+a8b35e1d2b96        portainer/portainer    "/portainer"             4 months ago        Up 43 minutes       0.0.0.0:9000->9000/tcp                             portainer
+```
+
+Stop docker:
+```
+docker stop determined_boyd redis
+```
+
+Start docker-compose:
+
+```
+docker-compose up
+Creating network "dockerapp_default" with the default driver
+Building dockerapp
+Step 1/7 : FROM python:3.5
+```
+
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/compose-up.png)
