@@ -438,7 +438,7 @@ our scripts for docker orchestration.
 ### Docker-compose commands:
 
 Command | Description
-- | -
+-|-
 docker-compose up | starts up all the containers.
 docker-compose ps | checks the status of the containers managed by docker compose.
 docker-compose logs | outputs colored and aggregated logs for the compose-managed
