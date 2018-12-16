@@ -279,3 +279,83 @@ lo        Link encap:Local Loopback
 ### Bridge Network summary
 
 ![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/bridge_network_sumup.png)
+
+
+### Host and Overlayed network
+
+Host Network
+
+  - The least protected network model, it adds a container on the
+host's network stack.
+  - Containers deployed on the host stack have full access to the host's
+interface.
+  - This kind of containers are usually called open containers.
+
+To create a open container we add `--net host` flag:
+
+```
+docker run -d --name container_4 --net host busybox  sleep 1000
+4c70b54bf4052c4594b5c591bc0d9ef53141844356ce211775c555101eb2cd8a
+```
+
+List all interfaces of this container:
+
+```
+docker exec -it container_4 ifconfig
+docker0   Link encap:Ethernet  HWaddr 02:42:BD:B3:F0:41  
+          inet addr:172.17.0.1  Bcast:172.17.255.255  Mask:255.255.0.0
+          inet6 addr: fe80::42:bdff:feb3:f041/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:12 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:976 (976.0 B)
+
+-----------------------------------------------------------------------
+
+veth0713854 Link encap:Ethernet  HWaddr D2:1F:80:97:8B:DF  
+          inet6 addr: fe80::d01f:80ff:fe97:8bdf/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:19 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:1506 (1.4 KiB)
+
+vethb829ec2 Link encap:Ethernet  HWaddr 96:5F:61:65:74:DA  
+          inet6 addr: fe80::945f:61ff:fe65:74da/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:20 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:1576 (1.5 KiB)
+-----------------------------------------------------------------------
+
+wlan0     Link encap:Ethernet  HWaddr C8:FF:28:5C:F7:6F  
+          inet addr:192.168.1.12  Bcast:192.168.1.255  Mask:255.255.255.0
+          inet6 addr: fd84:4765:6061:5200:61d5:eeb5:60bb:8259/64 Scope:Global
+          inet6 addr: fd84:4765:6061:5200:caff:28ff:fe5c:f76f/64 Scope:Global
+          inet6 addr: fe80::caff:28ff:fe5c:f76f/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:30507 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:19485 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:33471502 (31.9 MiB)  TX bytes:2964073 (2.8 MiB)
+```
+
+### Host Network
+
+  - Minimum network security level.
+  - No isolation on this type of open containers, thus leave the
+container widely unprotected.
+  - Containers running in the host network stack should see a higher
+level of performance than those traversing the docker0 bridge and
+iptables port mappings.
+
+### Overlay Network
+
+- Supports overlay networks out-of-the-bus
+- Requires some pre existing conditions before it can get created:
+  - Running docker in swarm mode
+  - Using a key-value pair
+
+If you want to create a network across multiple host machines you would need the overlay network model.
