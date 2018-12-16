@@ -442,6 +442,8 @@ Creating dockerapp_redis_1_48a7fcdbca6b ... done
 Creating dockerapp_dockerapp_1_c7cfba167d7c ... done
 ```
 
-There can be even more complex topologies. For instance in a multi service environment each service can run on a specific network. If we are talking about a web server then the front-end can function as proxy, back-end can run on a different network and the app engine can belong to both networks as it needs to process HTTP requests from proxy and pass those to the db.
+There can be even more complex topologies. For instance in a multi service environment, each service can run on a specific network. If we are talking about a web server, the front-end can function as proxy, back-end can run on a different network and the app engine belongs to both networks as it needs to process HTTP requests from proxy and pass those to the db.
+
+### Complex docker-compose
 
 ![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/complex_docker_compose.png)
