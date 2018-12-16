@@ -13,4 +13,4 @@ For this section we sill use python unit testing framework
 
 References:
   - [The Python unit testing framework](https://docs.python.org/2/library/unittest.html), sometimes referred to as “PyUnit,” is a Python language version of JUnit, by Kent Beck and Erich Gamma. JUnit is, in turn, a Java version of Kent’s Smalltalk testing framework. Each is the de facto standard unit testing framework for its respective language.
-  - [The Hitchhiker's Guide]('https://docs.python-guide.org/writing/tests/') to unity testing
+  - [The Hitchhiker's Guide](https://docs.python-guide.org/writing/tests/) to unity testing
