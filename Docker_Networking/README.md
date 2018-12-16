@@ -359,3 +359,89 @@ iptables port mappings.
   - Using a key-value pair
 
 If you want to create a network across multiple host machines you would need the overlay network model.
+
+
+### Define container Network with docker compose:
+
+When defining network models through docker compose file by default docker compose sets up a single network for your services.
+Each container will join the default network and it's reachable by other containers on that network.
+
+```
+git stash && git checkout v0.4
+Saved working directory and index state WIP on (no branch): 81b086a simple key value lookup
+error: The following untracked working tree files would be overwritten by checkout:
+	docker-compose.yml
+Please move or remove them before you switch branches.
+Aborting
+```
+
+We run `ducker-compose up` to fire up the `redis` and `dockerapp` containers.
+This creates a network `dockerapp_default` with the default driver the prefix of the devil network
+
+```
+docker-compose up -d
+Starting dockerapp_redis_1_990279eb2090 ... done
+Starting dockerapp_dockerapp_1_e70ce470dd77 ... done
+```
+List docker networks.
+
+```
+docker network ls
+NETWORK ID          NAME                DRIVER              SCOPE
+f5d7942dcbf0        bridge              bridge              local
+b9908d6d8a02        bridge_two          bridge              local
+e96e024ae197        dockerapp_default   bridge              local
+2eb144e0227b        host                host                local
+c34e8514466e        none                null                local
+```
+
+When stopping containers with `docker-compose down` the created network will be removed:
+
+```
+docker-compose down
+Stopping dockerapp_dockerapp_1_e70ce470dd77 ... done
+Stopping dockerapp_redis_1_990279eb2090     ... done
+Removing dockerapp_dockerapp_1_e70ce470dd77 ... done
+Removing dockerapp_redis_1_990279eb2090     ... done
+Removing network dockerapp_default          # Remove `dockerapp network`
+```
+
+### Define networks in Dockerfile
+
+We can define our own custom network in Dockerfile on the same level as services level.
+We then define which type of driver we will use and under each service we can specify the network
+
+```
+version: "3.0"
+services:
+  dockerapp:
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - redis
+    networks:
+      - praslea_net
+
+  redis:
+    image: redis:3.2.0
+    networks:
+     - praslea_net
+
+networks:
+  praslea_net:
+    driver: bridge
+```
+
+docker-compose up creates a `_praslea_net` network based on new     `docker-compose` file
+
+```
+docker-compose up -d
+Creating network "dockerapp_praslea_net" with driver "bridge"
+Creating dockerapp_redis_1_48a7fcdbca6b ... done
+Creating dockerapp_dockerapp_1_c7cfba167d7c ... done
+```
+
+There can be even more complex topologies. For instance in a multi service environment each service can run on a specific network. If we are talking about a web server then the front-end can function as proxy, back-end can run on a different network and the app engine can belong to both networks as it needs to process HTTP requests from proxy and pass those to the db.
+
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/complex_docker_compose.png)
