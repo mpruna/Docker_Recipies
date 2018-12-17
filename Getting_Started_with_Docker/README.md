@@ -275,3 +275,29 @@ docker logs tomcat_base_8
 10-Dec-2018 04:08:59.347 INFO [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["ajp-apr-8009"]
 10-Dec-2018 04:08:59.361 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in 1375 ms
 ```
+
+### More on logging:
+
+Docker supports many logging drivers (like Fluentd, JSON File, Journal, Syslog), by default logging driver is JSON File. To use a different logging driver, change the value of ‘log-driver’ in /etc/docker/daemon.json.
+There are two ways to configure the Docker daemon:
+
+  - Use a JSON configuration file. This is the preferred option, since it keeps all configurations in a single place.
+  - Use flags when starting dockerd.
+
+### Docker log options:
+
+docker logs --help
+
+```
+Usage:	docker logs [OPTIONS] CONTAINER
+
+Fetch the logs of a container
+
+Options:
+      --details        Show extra details provided to logs
+  -f, --follow         Follow log output
+      --since string   Show logs since timestamp (e.g. 2013-01-02T13:23:37) or relative (e.g. 42m for 42 minutes)
+      --tail string    Number of lines to show from the end of the logs (default "all")
+  -t, --timestamps     Show timestamps
+      --until string   Show logs before a timestamp (e.g. 2013-01-02T13:23:37) or relative (e.g. 42m for 42 minutes)
+```
