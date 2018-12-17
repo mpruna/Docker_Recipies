@@ -14,3 +14,97 @@ For this section we sill use python unit testing framework
 References:
   - [The Python unit testing framework](https://docs.python.org/2/library/unittest.html), sometimes referred to as “PyUnit,” is a Python language version of JUnit, by Kent Beck and Erich Gamma. JUnit is, in turn, a Java version of Kent’s Smalltalk testing framework. Each is the de facto standard unit testing framework for its respective language.
   - [The Hitchhiker's Guide](https://docs.python-guide.org/writing/tests/) to unity testing
+
+
+```
+  git stash && git checkout v0.5
+  No local changes to save
+  Note: checking out 'v0.5'.
+
+  You are in 'detached HEAD' state. You can look around, make experimental
+  changes and commit them, and you can discard any commits you make in this
+  state without impacting any branches by performing another checkout.
+
+  If you want to create a new branch to retain commits you create, you may
+  do so (now or later) by using -b with the checkout command again. Example:
+
+    git checkout -b <new-branch-name>
+
+  HEAD is now at 2e0bb84 Merge branch 'branch-v0.4' into branch-v0.5
+```
+
+Python test script will test docker up functionality:
+  - first function initializes the test vertion
+  - first test case, calls the / URL, with a key value pair and sets the submit value to save, 200 OK represents a successful test case
+  - second test case checks the `load` function, 200 OK represents a successful test case
+
+```
+import unittest
+import app
+
+class TestDockerapp(unittest.TestCase):
+
+    def setUp(self):                      # Setup/initializes a test version of our Docker app
+        self.app = app.app.test_client()
+
+    def test_save_value(self):            # Method used to test submit function
+        response = self.app.post('/', data=dict(submit='save', key='2', cache_value='two'))
+        assert response.status_code == 200
+        assert b'2' in response.data
+        assert b'two' in response.data
+
+    def test_load_value(self):           # Method used to test load function
+        self.app.post('/', data=dict(submit='save', key='2', cache_value='two'))
+        response = self.app.post('/', data=dict(submit='load', key='2'))
+        assert response.status_code == 200
+        assert b'2' in response.data
+        assert b'two' in response.data
+
+if __name__=='__main__':
+    unittest.main()
+```
+Docker build
+
+```
+docker-compose build
+redis uses an image, skipping
+Building dockerapp
+Step 1/7 : FROM python:3.5
+ ---> ffc8b495cd26
+Step 2/7 : RUN pip install Flask==0.11.1 redis==2.10.5
+
+
+Removing intermediate container 4b3eeef9d7ee
+ ---> 698781c7ae9a
+Successfully built 698781c7ae9a
+Successfully tagged dockerapp_dockerapp:latest
+```
+
+docker-compose up
+
+```
+docker-compose up -d
+Creating network "dockerapp_default" with the default driver
+Recreating dockerapp_redis_1_63bf73bea6e0 ... done
+Recreating dockerapp_dockerapp_1_ea9b90403a90 ... done
+```
+
+Running tests:
+
+```
+docker-compose run dockerapp python test.py
+Starting dockerapp_redis_1_63bf73bea6e0 ... done
+..
+----------------------------------------------------------------------
+Ran 2 tests in 0.020s
+
+OK
+```
+
+
+### Incorporating Unit Tests into Docker Images
+Pros:
+  - A single image is used through development, testing and
+production, which greatly ensures the reliability of our tests.
+Cons:
+  - It increases the size of the image.
