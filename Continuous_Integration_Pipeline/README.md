@@ -143,3 +143,16 @@ corrected as soon as possible.
   - continuous integration server would build the Docker image after it has built the application.
   - The application goes inside the image and continuous integration server pushes the image to a Docker registry.
   - you can pull the newly built image from Docker registry and run the application inside the container on another host it can be development, staging or even production environment.
+
+
+### CI with GitHub and CircleCI:
+
+GitHub is essential to continuous integration workflow. GitHub allows you to host public git repositories
+for free.
+We use `CircleCI` as the continuous integration server. `CircleCI` is a hosted continuous integration solution which allows you to run one concurrent build for free.
+
+### Setup GitHub follow below resources:
+
+  - [Checking for existing SSH keys](https://help.github.com/articles/checking-for-existing-ssh-keys/)
+  - [Generating a new SSH key and adding it to the ssh-agent:](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/)
+  - [Adding a new SSH key to your GitHub account:](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/)
