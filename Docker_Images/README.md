@@ -4,6 +4,19 @@ Docker is comprised of read only layers stacked on top of each other. This was a
 An image can reference a parent image, and the image at the bottom is the base image.
 ![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/image_layers.png)
 
+A Docker image is made up of filesystems layered over each other. At the
+base is a boot filesystem, bootfs , which resembles the typical Linux/Unix boot
+filesystem. A Docker user will probably never interact with the boot filesystem.
+Indeed, when a container has booted, it is moved into memory, and the boot
+filesystem is unmounted to free up the RAM used by the initrd disk image.
+So far this looks pretty much like a typical Linux virtualization stack. Indeed,
+Docker next layers a root filesystem, rootfs , on top of the boot filesystem. This
+rootfs can be one or more operating systems (e.g., a Debian or Ubuntu filesys-
+tem).
+
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/bootrootfs.png)
+
+
 This is visible with `--history` cmd
 
 ```
@@ -21,18 +34,6 @@ files, modifying existing files, and deleting files are written to this thin wri
 Multiple containers can share the underlying image but have different data state.
 
 ![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/writable_layer.png)
-
-A Docker image is made up of filesystems layered over each other. At the
-base is a boot filesystem, bootfs , which resembles the typical Linux/Unix boot
-filesystem. A Docker user will probably never interact with the boot filesystem.
-Indeed, when a container has booted, it is moved into memory, and the boot
-filesystem is unmounted to free up the RAM used by the initrd disk image.
-So far this looks pretty much like a typical Linux virtualization stack. Indeed,
-Docker next layers a root filesystem, rootfs , on top of the boot filesystem. This
-rootfs can be one or more operating systems (e.g., a Debian or Ubuntu filesys-
-tem).
-
-![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/bootrootfs.png)
 
 
 ### Building docker images:
