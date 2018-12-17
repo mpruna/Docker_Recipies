@@ -321,6 +321,7 @@ sudo journalctl -fu docker.service
 
       a) Docker Engine:
         - Docker Engine logs are captured by the OS's system manager by default. These logs can be sent to a centralized logging server.
+
       b) Infrastructure Services
         - As the infrastructure becomes more complex and more containers are deployed, you’ll need a way of associating log events with specific processes rather than just their host containers
         - Containerized infrastructure services deployed for the purpose of monitoring, auditing, reporting, etc. Those services generate important logs and need to be handled separately, if not captured by Docker Engine default logging driver.
