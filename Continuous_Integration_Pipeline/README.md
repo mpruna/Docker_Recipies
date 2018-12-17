@@ -123,7 +123,7 @@ corrected as soon as possible.
 
 ### A Typical CI Pipeline without Docker
 
-![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/http_Flask.png)
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/CI_pipeline.png)
 
 ### CI flow without Docker:
 
@@ -134,3 +134,12 @@ corrected as soon as possible.
   - the continuous integration server would also assign a build label to the version of the code it just built.
   - The continuous integration server can also be configured to deploy the application to staging
   or production server after it validates the build
+
+
+### Docker continuous integration:
+
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/Docker_CI.png)
+
+  - continuous integration server would build the Docker image after it has built the application.
+  - The application goes inside the image and continuous integration server pushes the image to a Docker registry.
+  - you can pull the newly built image from Docker registry and run the application inside the container on another host it can be development, staging or even production environment.
