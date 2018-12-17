@@ -281,9 +281,9 @@ docker logs tomcat_base_8
 
 ### References:
 
-  [docker logging](https://docs.docker.com/config/containers/logging/configure/)
-  [logging best practices](https://success.docker.com/article/logging-best-practices)
-  [level-up docker logging](https://www.level-up.one/deep-dive-into-docker-logging/)
+  - [docker logging](https://docs.docker.com/config/containers/logging/configure/)
+  - [logging best practices](https://success.docker.com/article/logging-best-practices)
+  - [level-up docker logging](https://www.level-up.one/deep-dive-into-docker-logging/)
 
 Docker supports many logging drivers (like Fluentd, JSON File, Journal, Syslog), by default logging driver is JSON File. To use a different logging driver, change the value of ‘log-driver’ in /etc/docker/daemon.json.
 There are two ways to configure the Docker daemon:
