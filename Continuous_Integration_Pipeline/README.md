@@ -103,8 +103,34 @@ OK
 
 
 ### Incorporating Unit Tests into Docker Images
+
 Pros:
   - A single image is used through development, testing and
 production, which greatly ensures the reliability of our tests.
 Cons:
   - It increases the size of the image.
+
+### Fit Docker Technology into Continuous Integration(CI) Process
+
+What is Continuous Integration?
+  • Continuous integration is a software engineering practice in which
+isolated changes are immediately tested and reported when they are
+added to a larger code base.
+  • The goal of Continuous integration is to provide rapid feedback so that if
+a defect is introduced into the code base, it can be identified and
+corrected as soon as possible.
+
+
+### A Typical CI Pipeline without Docker
+
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/http_Flask.png)
+
+### CI flow without Docker:
+
+  - developers checkout code in local repository
+  - when features get done, they are committed to central repository
+  - commit would trigger the build process on continuous integration server
+  - The build process usually would involve checking latest code base, building the application and running unit and integration tests.
+  - the continuous integration server would also assign a build label to the version of the code it just built.
+  - The continuous integration server can also be configured to deploy the application to staging
+  or production server after it validates the build
