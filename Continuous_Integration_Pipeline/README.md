@@ -375,10 +375,43 @@ dockerapp_redis_1_63bf73bea6e0       docker-entrypoint.sh redis ...   Up      63
              docker-compose run dockerapp python test.py
        - deploy:
            name: Push application Docker image
-           command:
+           command: |
              docker login -u $DOCKER_HUB_USER_ID -p $DOCKER_HUB_PWD
              docker tag dockerapp_dockerapp $DOCKER_HUB_USER_ID/dockerapp:$CIRCLE_SHA1
              docker tag dockerapp_dockerapp $DOCKER_HUB_USER_ID/dockerapp:latest
              docker push $DOCKER_HUB_USER_ID/dockerapp:$CIRCLE_SHA1
              docker push $DOCKER_HUB_USER_ID/dockerapp:latest
 ```
+
+### Add new config.yml and commit
+
+```
+git add .circleci/config.yml
+```
+
+### Git push upstream
+
+```
+git push --set-upstream origin circle_ci_publish
+Username for 'https://github.com': mpruna
+Password for 'https://mpruna@github.com':
+Enumerating objects: 7, done.
+Counting objects: 100% (7/7), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (4/4), 449 bytes | 449.00 KiB/s, done.
+Total 4 (delta 1), reused 0 (delta 0)
+remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+To https://github.com/mpruna/dockerapp.git
+  d28738d..2c69c09  circle_ci_publish -> circle_ci_publish
+Branch 'circle_ci_publish' set up to track remote branch 'circle_ci_publish' from 'origin'.
+```
+
+### Successful Circle Build:
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/build_success.png)
+
+### Circle CI build
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/circle_build_docker.png)
+
+### Confirm Image pushed to DockerHub
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/build_pushed_hub.png)
