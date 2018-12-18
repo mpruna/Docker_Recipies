@@ -149,10 +149,148 @@ corrected as soon as possible.
 
 GitHub is essential to continuous integration workflow. GitHub allows you to host public git repositories
 for free.
-We use `CircleCI` as the continuous integration server. `CircleCI` is a hosted continuous integration solution which allows you to run one concurrent build for free.
+We use `CircleCI` as the continuous integration server. [`CircleCI`](https://circleci.com/product/) is a hosted continuous integration solution which allows you to run one concurrent build for free.
 
 ### Setup GitHub follow below resources:
 
   - [Checking for existing SSH keys](https://help.github.com/articles/checking-for-existing-ssh-keys/)
   - [Generating a new SSH key and adding it to the ssh-agent:](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/)
   - [Adding a new SSH key to your GitHub account:](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/)
+
+
+### Set up SSH keys for GitHub Account
+    - SSH keys are a way to identify trusted computers without involving
+  password.
+    - Generate a SSH key pair and save the private SSH key in your local
+  box and add the public key to your GitHub account.
+    - Then you can directly push your changes to GitHub repository without
+  typing password.
+
+#### Cloning/Forking dockerapp repository onto my GitHub account
+
+```
+git clone https://github.com/jleetutorial/dockerapp.git
+Cloning into 'dockerapp'...
+remote: Enumerating objects: 173, done.
+remote: Total 173 (delta 0), reused 0 (delta 0), pack-reused 173
+Receiving objects: 100% (173/173), 20.39 KiB | 366.00 KiB/s, done.
+Resolving deltas: 100% (59/59), done.
+```
+
+### Cloning dockerapp v0.6
+
+```
+git clone https://github.com/mpruna/dockerapp.git -b v0.6
+Cloning into 'dockerapp'...
+remote: Enumerating objects: 173, done.
+remote: Total 173 (delta 0), reused 0 (delta 0), pack-reused 173
+Receiving objects: 100% (173/173), 20.39 KiB | 2.26 MiB/s, done.
+Resolving deltas: 100% (59/59), done.
+Note: checking out '054eb8c5915f4834901b3c7337eb792610c906cf'.
+```
+
+### Switch to v0.6
+
+```
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -b with the checkout command again. Example:
+
+
+git checkout -b <new-branch-name>
+
+git checkout -b v0.6
+M	.gitmodules
+D	Continuous_Integration_Pipeline/dockerapp
+Switched to a new branch 'v0.6'
+```
+
+### `CircleCI` configuration walk through:
+
+```
+version: 2                               #CircleCI V2
+jobs:                                    #Every config file must have a job    
+  build:                                 
+    working_directory: /dockerapp        #Default working directory for the test
+    docker:                              #Specify container images for this job, jobs will run in container
+      - image: docker:17.05.0-ce-git     #or Docker in Docker/Define outside container (docker with git)   
+    steps:                  
+      - checkout                         #checkout code from GitHub              
+      - setup_remote_docker              #create docker images for deployment, using a special key
+      - run:                             #Install docker-compose in `CI` environment through `python pip`
+          name: Install dependencies
+          command: |
+            apk add --no-cache py-pip=9.0.0-r1
+            pip install docker-compose==1.15.0
+      - run:                            #Spin out containers and Run test inside cotnainers
+          name: Run tests
+          command: |
+            docker-compose up -d
+            docker-compose run dockerapp python test.py
+```
+
+### Inside CircleCI
+
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/InsideCI.png)
+
+
+### Running `CircleCI` build
+
+If we have already a GitHub account we can log into `CircleCI` with those credentials.
+From the lest side panel we click:`ADD Project`;`dockerapp`;`Setup Project`;`Start Building`
+This project fails because we used dockerapp:latest imaged and by default this pushes the image to DockerHub, but we didn't provide credentials.
+
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/CIfailed.png)
+
+
+But the whole purpose of continuous integration is that a build will automatically trigger a commit when a code is pushed to the central repository. This time let's tag this project v0.6 and it should work, because we are not using the latest tag.
+
+
+```
+git checkout v0.6
+Note: checking out 'v0.6'.
+
+git checkout v0.6
+Note: checking out 'v0.6'.
+```
+
+### Add a different tag to `Circle CI` build
+
+```
+git checkout v0.6
+Note: checking out 'v0.6'.
+```
+
+### Add dummy test file and commit:
+
+```
+git add dummy.txt
+
+git commit -m "Added dummy txt to Circle CI build"
+[test-ci c2ab42c] Added dummy txt to Circle CI build
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 dummy.txt
+```
+
+### Push branch to remote:
+
+```
+git push --set-upstream origin test-ci
+Username for 'https://github.com': mpruna
+Password for 'https://mpruna@github.com':
+Enumerating objects: 4, done.
+Counting objects: 100% (4/4), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 288 bytes | 288.00 KiB/s, done.
+Total 3 (delta 1), reused 1 (delta 0)
+remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+remote:
+remote: Create a pull request for 'test-ci' on GitHub by visiting:
+remote:      https://github.com/mpruna/dockerapp/pull/new/test-ci
+remote:
+To https://github.com/mpruna/dockerapp.git
+ * [new branch]      test-ci -> test-ci
+Branch 'test-ci' set up to track remote branch 'test-ci' from 'origin'.
+```
+
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/CI_build_success.png)
