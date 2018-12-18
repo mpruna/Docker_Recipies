@@ -299,3 +299,86 @@ Branch 'test-ci' set up to track remote branch 'test-ci' from 'origin'.
 ### Test run ok
 
 ![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/test_run_ok.png)
+
+
+### Complete `Circle CI` Workflow:
+
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/Complete_CI_Workflow.png)
+
+We can use `Circle CI` to publish to DockerHub, but we need to setup the credentials so that `Circle CI` has the permission to publish to DockerHub.
+After we log onto Circle CI: `click dockerapp`; `Right Side, Project Settings`;`Environment Variables` and setup `user`,`password`,`email` variables.
+
+
+### Save current build and create a new branches
+
+```
+git stash && git checkout v0.6
+No local changes to save
+Note: checking out 'v0.6'.
+
+
+git checkout -b <new-branch-name>
+HEAD is now at 054eb8c reformatting
+```
+
+```
+git checkout -b circle_ci_publish
+Switched to a new branch 'circle_ci_publish'
+```
+
+We add a new section to circle yml file, add a new deploy give it a name(this name will be seen on Circle CI build). In the command section we specify which commands to run. First command is DockerHub login command using the environment variables specified in the above step. We should be able to trace back to the exact docker file and build context use to create it. For out `dockerapp` application we will tag the newly created image with two tags:
+
+  1. commit hash of the source (One is to get cache of the source code so that we can link the image with the exact docker file and build context used to create it)
+  2. latest (so that it can refer to new build that passed our test)  
+
+Next command will tag the app the app name will contain the `name_of_the_directory`_ `service_name_in_compose` $`DOCKE_USER_ID`/`dockerapp`:$`CIRCLE_SHA1`
+Tag the image with `latest`
+Push the image to DockerHub
+
+### Start docker compose
+
+```
+docker-compose up -d
+Starting dockerapp_redis_1_63bf73bea6e0 ... done
+Recreating dockerapp_dockerapp_1_ea9b90403a90 ... done
+```
+
+```
+docker-compose ps
+               Name                             Command               State           Ports         
+----------------------------------------------------------------------------------------------------
+dockerapp_dockerapp_1_ea9b90403a90   python app.py                    Up      0.0.0.0:5000->5000/tcp
+dockerapp_redis_1_63bf73bea6e0       docker-entrypoint.sh redis ...   Up      6379/tcp              
+```
+
+ ### Circle config file
+
+ ```
+ version: 2
+ jobs:
+   build:
+     working_directory: /dockerapp
+     docker:
+       - image: docker:17.05.0-ce-git
+     steps:
+       - checkout
+       - setup_remote_docker
+       - run:
+           name: Install dependencies
+           command: |
+             apk add --no-cache py-pip=9.0.0-r1
+             pip install docker-compose==1.15.0
+       - run:
+           name: Run tests
+           command: |
+             docker-compose up -d
+             docker-compose run dockerapp python test.py
+       - deploy:
+           name: Push application Docker image
+           command:
+             docker login -u $DOCKER_HUB_USER_ID -p $DOCKER_HUB_PWD
+             docker tag dockerapp_dockerapp $DOCKER_HUB_USER_ID/dockerapp:$CIRCLE_SHA1
+             docker tag dockerapp_dockerapp $DOCKER_HUB_USER_ID/dockerapp:latest
+             docker push $DOCKER_HUB_USER_ID/dockerapp:$CIRCLE_SHA1
+             docker push $DOCKER_HUB_USER_ID/dockerapp:latest
+```
