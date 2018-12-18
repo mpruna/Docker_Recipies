@@ -158,7 +158,15 @@ We use `CircleCI` as the continuous integration server. [`CircleCI`](https://cir
   - [Adding a new SSH key to your GitHub account:](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/)
 
 
-Cloning/Forking dockerapp repository onto my GitHub account
+### Set up SSH keys for GitHub Account
+    - SSH keys are a way to identify trusted computers without involving
+  password.
+    - Generate a SSH key pair and save the private SSH key in your local
+  box and add the public key to your GitHub account.
+    - Then you can directly push your changes to GitHub repository without
+  typing password.
+
+#### Cloning/Forking dockerapp repository onto my GitHub account
 
 ```
 git clone https://github.com/jleetutorial/dockerapp.git
@@ -225,4 +233,64 @@ jobs:                                    #Every config file must have a job
 ![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/InsideCI.png)
 
 
-Running `CircleCI` build
+### Running `CircleCI` build
+
+If we have already a GitHub account we can log into `CircleCI` with those credentials.
+From the lest side panel we click:`ADD Project`;`dockerapp`;`Setup Project`;`Start Building`
+This project fails because we used dockerapp:latest imaged and by default this pushes the image to DockerHub, but we didn't provide credentials.
+
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/CIfailed.png)
+
+
+But the whole purpose of continuous integration is that a build will automatically trigger a commit when a code is pushed to the central repository. This time let's tag this project v0.6 and it should work, because we are not using the latest tag.
+
+
+```
+git checkout v0.6
+Note: checking out 'v0.6'.
+
+git checkout v0.6
+Note: checking out 'v0.6'.
+```
+
+### Add a different tag to `Circle CI` build
+
+```
+git checkout v0.6
+Note: checking out 'v0.6'.
+```
+
+### Add dummy test file and commit:
+
+```
+git add dummy.txt
+
+git commit -m "Added dummy txt to Circle CI build"
+[test-ci c2ab42c] Added dummy txt to Circle CI build
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 dummy.txt
+```
+
+### Push branch to remote:
+
+```
+git push --set-upstream origin test-ci
+Username for 'https://github.com': mpruna
+Password for 'https://mpruna@github.com':
+Enumerating objects: 4, done.
+Counting objects: 100% (4/4), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 288 bytes | 288.00 KiB/s, done.
+Total 3 (delta 1), reused 1 (delta 0)
+remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+remote:
+remote: Create a pull request for 'test-ci' on GitHub by visiting:
+remote:      https://github.com/mpruna/dockerapp/pull/new/test-ci
+remote:
+To https://github.com/mpruna/dockerapp.git
+ * [new branch]      test-ci -> test-ci
+Branch 'test-ci' set up to track remote branch 'test-ci' from 'origin'.
+```
+
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/CI_build_success.png)
