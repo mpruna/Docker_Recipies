@@ -294,3 +294,8 @@ Branch 'test-ci' set up to track remote branch 'test-ci' from 'origin'.
 ```
 
 ![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/CI_build_success.png)
+
+
+### Test run ok
+
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/test_run_ok.png)
