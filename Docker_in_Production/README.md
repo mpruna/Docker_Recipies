@@ -186,3 +186,17 @@ latest: Pulling from praslea/dockerapp
 Creating dockerapp_redis_1_f58637094be9 ... done
 Creating dockerapp_dockerapp_1_6ae529f9cf79 ... done
 ```
+
+We verify that docker machine is up and running:
+
+docker-machine ls
+```
+NAME                 ACTIVE   DRIVER         STATE     URL                        SWARM   DOCKER     ERRORS
+docker-app-machine   *        digitalocean   Running   tcp://ip:port           v18.09.0   
+```
+
+`*` -- specifies that this docker-machine is active and all the changes we make will be done on this particular machine.
+
+### Verify dockerapp in DigitalOcean:
+
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/docker_app_machine.png)
