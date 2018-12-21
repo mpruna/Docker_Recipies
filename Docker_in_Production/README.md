@@ -248,7 +248,6 @@ Options | Description
    --swarm-strategy "spread" | Define a default scheduling strategy for Swarm
    --tls-san [--tls-san option --tls-san option] | Support extra SANs for TLS certs
 
-
 ### Scale Docker for large applications
 
 A swarm is a group of machines that are running Docker and joined into a cluster. After that has happened, you continue to run the Docker commands you’re used to, but now they are executed on a cluster by a swarm manager. The machines in a swarm can be physical or virtual. After joining a swarm, they are referred to as nodes.
@@ -260,4 +259,4 @@ This is what Docker Swarm is for:
 Docker Swarm manages remote hosts in the cloud running docker daemon. Swarm manager knows the status of each Docker Node in the cluster.Swarm can grow multiple hosts into a cluster and distribute dcoker containers among these hosts. So the work load is divided by the nodes in the swarm and this is transparent to the end users.
 The workload is outsourced from the client to swarm manager
 
-![IMG](images/docker_swarm.jpeg)
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/docker_swarm.jpeg)
