@@ -215,7 +215,7 @@ Description:
 Options | Description
 -|-
    --digitalocean-access-token | Digital Ocean access token [$DIGITALOCEAN_ACCESS_TOKEN]
-    --digitalocean-backups | enable backups for droplet [$DIGITALOCEAN_BACKUPS]
+   --digitalocean-backups | enable backups for droplet [$DIGITALOCEAN_BACKUPS]
    --digitalocean-image "ubuntu-16-04-x64" | Digital Ocean Image [$DIGITALOCEAN_IMAGE]
    --digitalocean-ipv6 | enable ipv6 for droplet [$DIGITALOCEAN_IPV6]
    --digitalocean-monitoring | enable monitoring for droplet [$DIGITALOCEAN_MONITORING]
