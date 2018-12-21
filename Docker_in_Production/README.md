@@ -257,6 +257,165 @@ This is what Docker Swarm is for:
   - Docker Swarm decides on which host to run the container based on scheduling methods
 
 Docker Swarm manages remote hosts in the cloud running docker daemon. Swarm manager knows the status of each Docker Node in the cluster.Swarm can grow multiple hosts into a cluster and distribute dcoker containers among these hosts. So the work load is divided by the nodes in the swarm and this is transparent to the end users.
-The workload is outsourced from the client to swarm manager
+The workload is outsourced from the client to swarm manager.
+Swarm managers are the only machines in a swarm that can execute your commands, or authorize other machines to join the swarm as workers. Workers are just there to provide capacity and do not have the authority to tell any other machine what it can and cannot do.
 
-![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/docker_swarm.jpeg)
+### How Swarm cluster works
+  - To deploy your application to a swarm, you submit your service to a
+manager node.
+  - The manager node dispatches units of work called tasks to worker nodes.
+  - Manager nodes also perform the orchestration and cluster management
+functions required to maintain the desired state of the swarm.
+  - Worker nodes receive and execute tasks dispatched from manager nodes.
+  - An agent runs on each worker node and reports on the tasks assigned to
+it. The worker node notifies the manager node of the current state of its
+assigned tasks so that the manager can maintain the desired state of each
+worker.
+
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/docker_swarm.png)
+
+### Setup 2 nodes in swarm cluster:
+
+  - Step 1: Deploy two VMs, one will be used for the Swam manager node,
+and the other one will be used as a worker node.
+  - Step 2: Appoint the first VM as Swarm manager node and initialize a
+Swarm cluster.
+– docker swarm init
+  - Step 3: Let the second VM join the Swarm cluster as a worker node.
+– docker swarm join
+
+
+### Create DigitalOcean swarm-manager using docker-machine:
+
+
+docker-machine create --driver digitalocean --digitalocean-access-token `access_token_api` swarm-manager
+```
+Running pre-create checks...
+Creating machine...
+(swarm-manager) Creating SSH key...
+(swarm-manager) Creating Digital Ocean droplet...
+(swarm-manager) Waiting for IP address to be assigned to the Droplet...
+Waiting for machine to be running, this may take a few minutes...
+Detecting operating system of created instance...
+Waiting for SSH to be available...
+Detecting the provisioner...
+Provisioning with ubuntu(systemd)...
+Installing Docker...
+Copying certs to the local machine directory...
+Copying certs to the remote machine...
+Setting Docker configuration on the remote daemon...
+Checking connection to Docker...
+Docker is up and running!
+To see how to connect your Docker Client to the Docker Engine running on this virtual machine, run: docker-machine env swarm-manager
+```
+
+### Connect docker-client to swarm-manager:
+
+docker-machine env swarm-manager
+```
+export DOCKER_TLS_VERIFY="1"
+export DOCKER_HOST="tcp://ip:port"
+export DOCKER_CERT_PATH="/root/.docker/machine/machines/swarm-manager"
+export DOCKER_MACHINE_NAME="swarm-manager"
+# Run this command to configure your shell:
+# eval $(docker-machine env swarm-manager)
+```
+
+### Setup swarm-manager shell:
+
+```
+eval $(docker-machine env swarm-manager)
+```
+
+### Setup Docker Worker node:
+
+docker-machine create --driver digitalocean --digitalocean-access-token `access-access_token_api` swarm-node
+```
+Running pre-create checks...
+Creating machine...
+(swarm-node) Creating SSH key...
+(swarm-node) Creating Digital Ocean droplet...
+(swarm-node) Waiting for IP address to be assigned to the Droplet...
+Waiting for machine to be running, this may take a few minutes...
+Detecting operating system of created instance...
+Waiting for SSH to be available...
+Detecting the provisioner...
+Provisioning with ubuntu(systemd)...
+Installing Docker...
+Copying certs to the local machine directory...
+Copying certs to the remote machine...
+Setting Docker configuration on the remote daemon...
+Checking connection to Docker...
+Docker is up and running!
+To see how to connect your Docker Client to the Docker Engine running on this virtual machine, run: docker-machine env swarm-node
+```
+
+### Appoint the first VM as a swarm-manager.
+
+This is done by a `docker swarm init` command. Docker engine targeted by this command becomes a manager in the newly created a single note swarm. But we need to verify which docker-machine is active. The command will apply to the active one. This is singled out by the `*` sign.
+
+List docker-machines:
+
+docker-machine ls
+```
+NAME                 ACTIVE   DRIVER         STATE     URL                          SWARM   DOCKER     ERRORS
+docker-app-machine   -        digitalocean   Running   tcp://ip1:port             v18.09.0   
+swarm-manager        *        digitalocean   Running   tcp://ip2:port             v18.09.0   
+swarm-node           -        digitalocean   Running   tcp://ip3:port             v18.09.0   
+```
+
+### docker swarm init fails:
+
+This is because we did not specify which address to use. This is a feature of `DigitalOcean` which allows private networking between hosts in the same data center. The public IP can be accessed from anywhere else but the private IP can only be accessed by hosts in.
+
+docker swarm init
+```
+Error response from daemon: could not choose an IP address to advertise since this system has multiple addresses on interface eth0 (ip_public and ip_private) - specify one with --advertise-addr
+```
+
+### Initialize docker swarm with public ip:
+
+docker swarm init --advertise-addr `ip_public`
+```
+Swarm initialized: current node (ap09d0vvpe2z9422gwvmlezq0) is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+    docker swarm join --token `SWMTKN-1-1zr55y ip_public:port`
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+```
+
+Using `docker swarm join` we can bring a docker node into a swarm cluster. But we need to be inside the node to do this. Fist we need to ssh, the add the node to the cluster
+
+docker-machine ssh swarm-node
+```
+Welcome to Ubuntu 16.04.5 LTS (GNU/Linux 4.4.0-140-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+16 packages can be updated.
+7 updates are security updates.
+
+New release '18.04.1 LTS' available.
+Run 'do-release-upgrade' to upgrade to it.
+```
+
+### Join swarm cluster:
+
+```
+docker swarm join --token `SWMTKN-1-1zr55y public:port`
+This node joined a swarm as a worker.
+```
+
+Docker Swarm commands | Description
+-|-
+docker swarm init | Initialize a swarm. The docker engine targeted by this command
+becomes a manager in the newly created single-node swarm.
+docker swarm join | Join a swarm as a Swarm node.
+docker swarm leave | Leave the swarm
