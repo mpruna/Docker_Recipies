@@ -215,7 +215,7 @@ Description:
 Options | Description
 -|-
    --digitalocean-access-token | Digital Ocean access token [$DIGITALOCEAN_ACCESS_TOKEN]
-   --digitalocean-backups | enable backups for droplet [$DIGITALOCEAN_BACKUPS]
+    --digitalocean-backups | enable backups for droplet [$DIGITALOCEAN_BACKUPS]
    --digitalocean-image "ubuntu-16-04-x64" | Digital Ocean Image [$DIGITALOCEAN_IMAGE]
    --digitalocean-ipv6 | enable ipv6 for droplet [$DIGITALOCEAN_IPV6]
    --digitalocean-monitoring | enable monitoring for droplet [$DIGITALOCEAN_MONITORING]
@@ -247,3 +247,17 @@ Options | Description
    --swarm-opt [--swarm-opt option --swarm-opt option] | Define arbitrary flags for Swarm master
    --swarm-strategy "spread" | Define a default scheduling strategy for Swarm
    --tls-san [--tls-san option --tls-san option] | Support extra SANs for TLS certs
+
+
+### Scale Docker for large applications
+
+A swarm is a group of machines that are running Docker and joined into a cluster. After that has happened, you continue to run the Docker commands you’re used to, but now they are executed on a cluster by a swarm manager. The machines in a swarm can be physical or virtual. After joining a swarm, they are referred to as nodes.
+This is what Docker Swarm is for:
+
+  - Docker Swarm is a tool that clusters many Docker Engines and schedules Containers
+  - Docker Swarm decides on which host to run the container based on scheduling methods
+
+Docker Swarm manages remote hosts in the cloud running docker daemon. Swarm manager knows the status of each Docker Node in the cluster.Swarm can grow multiple hosts into a cluster and distribute dcoker containers among these hosts. So the work load is divided by the nodes in the swarm and this is transparent to the end users.
+The workload is outsourced from the client to swarm manager
+
+![IMG](images/docker_swarm.jpeg)
