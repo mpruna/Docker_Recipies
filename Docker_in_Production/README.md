@@ -420,3 +420,146 @@ docker swarm init | Initialize a swarm. The docker engine targeted by this comma
 becomes a manager in the newly created single-node swarm.
 docker swarm join | Join a swarm as a Swarm node.
 docker swarm leave | Leave the swarm
+
+
+### Deploy serviced to Swarm cluster
+
+
+### Docker Services
+
+  - The services can be defined in our Docker compose file.
+  - The service definition includes which Docker images to run, the port
+mapping and dependency between services.
+Docker Services
+  - When we are deploying services in the swarm mode, we can also set another important configuration, which is the deploy key and it is only available on Compose file formats version 3.x and up.
+  - The deploy key and its sub-options can be used to load balance and optimize performance for each service.
+
+In version three we can deploy multiple replicas and we use these replicas to load balance and optimize service performance. This also provides `High-Availability`and in the event a node goes down the other nodes can load-balance.
+Docker publishes a port for a service. It does so by listening on that port across all nodes within that swarm cluster when traffic arrives on that port. That traffic is then routed to a container running for that service.
+
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/docker_swarm_config.png)
+
+
+### Ingress load balancing:
+
+We can connect to the nginx service through a node which does NOT have nginx replicas, this is called ingress load balancing:
+
+  - All nodes listen for connections to published service ports.
+  - When that service is called by external systems, the receiving node will accept the traffic and internally load balance it using an internal DNS service that Docker maintains.
+
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/ingress_load_balancing)
+
+Besides this we can specify the percentage of CPU to use per node, `RAM` and `restart_policy`.
+
+### Docker Stack
+
+  - A docker stack is a group of interrelated services that share dependencies, and can be orchestrated an scaled together.
+  - You can image that a stack is a live collection of all the services defined in your docker compose file.
+  - Create a stack from your docker compose file:
+      - docker stack deploy
+  - In the Swarm mode,
+      - Docker compose files can be used for service definitions.
+      - Docker compose commands can’t be reused. Docker compose commands can only schedule the containers to a single node. We can't user docker-compose up, down docker-compose etc.
+      - We have to use docker stack command. You can think of docker stack as the docker compose in the swarm mode.
+
+### Deploy dockerapp
+
+1. Open the prod.yml file and deploy a key for our service. We define 2 replicas:
+
+cat prod.yml
+```
+version: "3.0"
+services:
+  dockerapp:
+    image: praslea/dockerapp
+    ports:
+      - "5000:5000"
+    depends_on:
+      - redis
+    deploy:
+      replicas: 2
+  redis:
+    image: redis:3.2.0
+```
+
+2. Create a stack from docker-compose file
+
+docker stack deploy --compose-file prod.yml dockerapp_stack
+```
+Creating network dockerapp_stack_default
+Creating service dockerapp_stack_dockerapp
+Creating service dockerapp_stack_redis
+```
+
+Docker stack has created an overlay network docker_stack_default for communication across the nodes.
+
+### List all the services on swarm:
+We can list all the stacks on the swarm cluster by running `docker stack ls`.
+Right now we only have a single stack composed of two services. we list out all the services in the stack
+
+docker stack ls
+```
+NAME                SERVICES            ORCHESTRATOR
+dockerapp_stack     2                   Swarm
+```
+
+### List docker stack services:
+
+We list out all the services in the stack by running docker stack services and provide the stack name as you see. We have two services running the `redis service` has one replica and the `dockerapp service` has two replicas.
+docker stack services dockerapp_stack
+
+```
+ID                  NAME                        MODE                REPLICAS            IMAGE                      PORTS
+aauncstdynhx        dockerapp_stack_dockerapp   replicated          2/2                 praslea/dockerapp:latest   *:5000->5000/tcp
+qnrf0oof832g        dockerapp_stack_redis       replicated          1/1                 redis:3.2.0                
+```
+
+### List ips for Docker VMs:
+
+docker-machine ls
+```
+NAME                 ACTIVE   DRIVER         STATE     URL                          SWARM   DOCKER     ERRORS
+docker-app-machine   -        digitalocean   Running   tcp://ip1:port             v18.09.0   
+swarm-manager        *        digitalocean   Running   tcp://ip2:port              v18.09.0   
+swarm-node           -        digitalocean   Running   tcp://ip3:port           v18.09.0
+```  
+### Update production services
+
+We can update the production services by editing the config file and running docker-compose. Changing the listening port from 5000-->4000.
+
+```
+version: "3.0"
+services:
+  dockerapp:
+    image: praslea/dockerapp
+    ports:
+      - "4000:5000"
+    depends_on:
+      - redis
+    deploy:
+      replicas: 2
+  redis:
+    image: redis:3.2.0
+```
+
+The stack deploy command tells us it's updating the service as opposed from the first time when we created the service:
+
+docker stack deploy --compose-file prod.yml dockerapp_stack
+```
+Updating service dockerapp_stack_dockerapp (id: aauncstdynhxnnl72hrprodvt)
+Updating service dockerapp_stack_redis (id: qnrf0oof832gcp58rqaezdkjz)
+```
+
+### Check stack ports
+
+docker stack services dockerapp_stack
+
+```
+ID                  NAME                        MODE                REPLICAS            IMAGE                      PORTS
+aauncstdynhx        dockerapp_stack_dockerapp   replicated          2/2                 praslea/dockerapp:latest   *:4000->5000/tcp
+qnrf0oof832g        dockerapp_stack_redis       replicated          1/1                 
+redis:3.2.0
+```
+### Check HTTP access port change:
+
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/docker_swarm_port_change.png)          
