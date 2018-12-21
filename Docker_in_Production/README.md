@@ -412,8 +412,9 @@ Run 'do-release-upgrade' to upgrade to it.
 docker swarm join --token `SWMTKN-1-1zr55y public:port`
 This node joined a swarm as a worker.
 ```
+### Docker swarm commands
 
-Docker Swarm commands | Description
+Commands | Description
 -|-
 docker swarm init | Initialize a swarm. The docker engine targeted by this command
 becomes a manager in the newly created single-node swarm.
