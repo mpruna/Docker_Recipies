@@ -562,4 +562,38 @@ redis:3.2.0
 ```
 ### Check HTTP access port change:
 
-![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/docker_swarm_port_change.png)          
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/docker_swarm_port_change.png)
+
+### Setup 2 redis replicas:
+
+```
+version: "3.0"
+services:
+  dockerapp:
+    image: praslea/dockerapp
+    ports:
+      - "4000:5000"
+    depends_on:
+      - redis
+    deploy:
+      replicas: 2
+  redis:
+    image: redis:3.2.0
+    deploy:
+       replicas: 2
+```
+
+docker stack deploy --compose-file prod.yml dockerapp_stack
+```
+Updating service dockerapp_stack_dockerapp (id: aauncstdynhxnnl72hrprodvt)
+Updating service dockerapp_stack_redis (id: qnrf0oof832gcp58rqaezdkjz)
+```         
+
+### Check redis replicas:
+
+docker stack  services dockerapp_stack
+```
+ID                  NAME                        MODE                REPLICAS            IMAGE                      PORTS
+aauncstdynhx        dockerapp_stack_dockerapp   replicated          2/2                 praslea/dockerapp:latest   *:4000->5000/tcp
+qnrf0oof832g        dockerapp_stack_redis       replicated          2/2                 redis:3.2.0   
+```
