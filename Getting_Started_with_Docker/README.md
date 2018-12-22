@@ -353,10 +353,11 @@ Splunk is another popular logging utility. To set up Splunk follow the steps usi
 
 Each Splunk forwarder connects to the local Docker socket, so it doesn't need additional log driver configuration at the daemon level. Connecting to the local socket also allows Splunk to pull out Docker container statistics in addition to logs.
 
+### Commands summary
 
-docker commands | Description 
+Docker Commands | Description
 -|-
-docker pull [OPTIONS] NAME[:TAG|@DIGEST] | Pull an image or a repository from a registry
+docker pull [OPTIONS] NAME[:TAG/@DIGEST] | Pull an image or a repository from a registry
 docker images [OPTIONS] [REPOSITORY[:TAG]] | list docker images
 docker run [OPTIONS] IMAGE [COMMAND] [ARG...]  |  runs a command in a new container, if the container is not found locally, it will pull and image from GitHub with default latest TAG and build a local container
 docker ps  |  list running docker Containers
@@ -366,6 +367,7 @@ docker stop/start/restart <container_id> | Stop/Start/Restart Docker Containers
 docker logs [OPTIONS] CONTAINER | Fetch the logs of a container
 
 docker run | Options
+-|-
 --name | give the container a name  
 -d/--detach |  Run container in background and print container ID. Containers started in detached mode and exit when the root process used to run the container exits.
 sleep ^nr  | Pause for NUMBER seconds/minutes, it's handy as we can prologue the life of a container after execution
