@@ -22,7 +22,7 @@ Each layer is only a set of differences from the layer before it. The layers are
 
 The major difference between a container and an image is the top writable layer. All writes to the container that add new or modify existing data are stored in this writable layer. When the container is deleted, the writable layer is also deleted. The underlying image remains unchanged.
 
-![IMG](images/containers_layers.jpeg)
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/containers_layers.jpeg)
 
 ### Container size on disk
 
@@ -163,7 +163,7 @@ The second-lowest layer, and each higher layer, contain a file called lower, whi
 
 ### How the overlay2 driver works
 
-![IMG](images/overlay.jpg)
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/overlay.jpg)
 
 OverlayFS layers two directories on a single Linux host and presents them as a single directory. These directories are called layers and the unification process is referred to as a union mount. OverlayFS refers to the lower directory as lowerdir and the upper directory a upperdir. The unified view is exposed through its own directory called merged.
 
