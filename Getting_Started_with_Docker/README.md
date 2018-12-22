@@ -353,18 +353,21 @@ Splunk is another popular logging utility. To set up Splunk follow the steps usi
 
 Each Splunk forwarder connects to the local Docker socket, so it doesn't need additional log driver configuration at the daemon level. Connecting to the local socket also allows Splunk to pull out Docker container statistics in addition to logs.
 
-### Commands summary
+### Command summary
 
 Docker Commands | Description
 -|-
-docker pull [OPTIONS] NAME[:TAG/@DIGEST] | Pull an image or a repository from a registry
-docker images [OPTIONS] [REPOSITORY[:TAG]] | list docker images
-docker run [OPTIONS] IMAGE [COMMAND] [ARG...]  |  runs a command in a new container, if the container is not found locally, it will pull and image from GitHub with default latest TAG and build a local container
+docker pull  | Pull an image or a repository from a registry
+docker images | list docker images
+docker run  |  runs a command in a new container, if the container is not found locally, it will pull and image from GitHub with default latest TAG and build a local container
 docker ps  |  list running docker Containers
 service docker start/stop/restart  |  start/stop/restart docker service
 docker info | Display Docker system-wide information  
 docker stop/start/restart <container_id> | Stop/Start/Restart Docker Containers
-docker logs [OPTIONS] CONTAINER | Fetch the logs of a container
+docker logs | Fetch the logs of a container
+
+
+### Commands most used arguments
 
 docker run | Options
 -|-
@@ -373,3 +376,4 @@ docker run | Options
 sleep ^nr  | Pause for NUMBER seconds/minutes, it's handy as we can prologue the life of a container after execution
 -rm  | -rm  removes the container after a command execution. It's useful because if we don't explicitly tell it so whenever we run an image a new container is spawned
 -it | attaches an interactive terminal to docker container  
+-p outside_port:inside_port  |  specify which port the app will use/Publish a container's port(s) to the host
