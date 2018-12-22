@@ -1,6 +1,6 @@
 ### Docker images
 
-Docker is comprised of read only layers stacked on top of each other. This was a base for the container in use is formed.
+Docker is comprised of read only layers stacked on top of each other. A base image is the foundation for  every container.
 An image can reference a parent image, and the image at the bottom is the base image.
 ![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/image_layers.png)
 
@@ -19,6 +19,7 @@ tem).
 
 This is visible with `--history` cmd
 
+
 ```
 docker history busybox:1.24
 IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
@@ -29,7 +30,7 @@ IMAGE               CREATED             CREATED BY                              
   - second layer or container is the shell `CMD ["sh"]`
 
 When we create a new container, you add a new, thin and writable layer on top of the underlying stack.
-This layer is often called the "writable container layer". All changes made to the running container, such as writing new
+This layer is often called the `writable container layer`. All changes made to the running container, such as writing new
 files, modifying existing files, and deleting files are written to this thin writable container layer.
 Multiple containers can share the underlying image but have different data state.
 
@@ -47,6 +48,7 @@ Make changes to a container:
 3. Commit changes made in the container.
 
 Pull Debian Jessie:
+
 
 ```
 docker run -it --name jessie debian:jessie
@@ -68,7 +70,7 @@ Install git and automatically confirm with yes to any install '-y':
 apt-get install git -y
 ```
 
-Docker commit
+### Docker commit
 
 Docker commit command would save the changes we made to the Docker container’s file system to a new image.
 
@@ -162,10 +164,9 @@ Successfully built 612bb4a71047
 Successfully tagged mpruna/debian:latest
 ```
 
-<<<<<<< HEAD
-Docker COPY and ADD
+### Docker COPY and ADD
 
-The COPY instruction copies new files or directories from build context and adds them to the file system of the container.
+The `COPY` instruction copies new files or directories from build context and adds them to the file system of the container.
 
 ```
 echo "Welcome Home" >> text.txt
@@ -212,7 +213,7 @@ total 4
 root@9716fad24def:/home#
 ```
 
-ADD allows you to download a file from internet and copy to the container. ADD also has the ability to automatically
+`ADD` allows you to download a file from internet and copy to the container. `ADD` also has the ability to automatically
 unpack compressed files. If the src argument is a local file in a recognized compression format then it is unpacked at the specified dest
 path in the container's filesystem.
 
@@ -251,14 +252,13 @@ path in the container's filesystem.
 =======
 ### Docker chain RUN instructions:
 
- - Each RUN command will execute the command on the top writable layer of the container, then commit the container as a new image.
- - The new image is used for the next step in the Dockerfile. So each RUN instruction will create a new image layer.
+ - Each `RUN` command will execute the command on the top writable layer of the container, then commit the container as a new image.
+ - The new image is used for the next step in the Dockerfile. So each `RUN` instruction will create a new image layer.
  - It is recommended to chain the RUN instructions in the Dockerfile to reduce the number of image layers it creates.
 
 It is recommended to chain the RUN instructions in Dockerfile to reduce the number of image layers it creates.
-Instead of having 3 instructions, we will do apt-get update and ap-get install git and vim to aggregate those three instructions into one.
-By editing the Dockerfile we have only two build steps instead of four, which means it is only adding one more
-layer on top of the base image instead of three.
+Instead of having 3 instructions, we will do `apt-get update and apt-get install git and vim` to aggregate those three instructions into one.
+By editing the Dockerfile we have only two build steps instead of four, which means it is only adding one more layer on top of the base image instead of three.
 
 ```
 FROM debian:latest
@@ -306,9 +306,9 @@ RUN apt-get update && apt-get install -y \
 CMD ["echo","hello world!"]
 ```
 
-docker build -t mpruna/debian .
 
 ```
+docker build -t mpruna/debian .
 Sending build context to Docker daemon  3.015MB
 Step 1/3 : FROM debian:latest
  ---> 4879790bd60d
