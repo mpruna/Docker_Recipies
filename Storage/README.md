@@ -22,7 +22,7 @@ Each layer is only a set of differences from the layer before it. The layers are
 
 The major difference between a container and an image is the top writable layer. All writes to the container that add new or modify existing data are stored in this writable layer. When the container is deleted, the writable layer is also deleted. The underlying image remains unchanged.
 
-![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/containers_layers.jpeg)
+![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/containers_layers.jpg)
 
 ### Container size on disk
 
