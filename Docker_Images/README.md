@@ -389,7 +389,7 @@ docker tag | Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
 docker login --username | Login to DockerHub
 docker push | Push docker image to DockerHub
 
-### Commands most common arguments
+### Commands common arguments
 Commands | Arguments
 -|-
 docker build `-t` | Tags an image
