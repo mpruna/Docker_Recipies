@@ -374,3 +374,25 @@ Successfully built c68f737959a7
 Successfully tagged mpruna/debian:latest
 >>>>>>> 35e8c29df58c0d8795e87d4cd724a4c9a7f5aa3b
 ```
+
+### Commands sum-up
+
+Commands | Description
+-|-
+docker history | Show the history of an image. It's useful if we want to know the image dependencies.
+docker commit | Create a new image from a container's changes
+docker images | Lists images
+docker build | Build an image from a Dockerfile
+COPY | copies new files or directories from build context and adds them to the file system of the container
+ADD | ADD allows you to download a file from internet and copy to the container. ADD also has the ability to automatically unpack compressed files
+docker tag | Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
+docker login --username | Login to DockerHub
+docker push | Push docker image to DockerHub
+
+### Commands most common arguments
+Commands | Arguments
+-|-
+docker build `-t` | Tags an image
+docker build `.` | Uses the current directory for the build path
+docker run `other cmd` | `cmd` specified as argument overwrites default docker run command
+docker build `--no-cache=True` | ignores docker default image caching
