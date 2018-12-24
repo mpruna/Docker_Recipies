@@ -367,7 +367,7 @@ docker stop/start/restart <container_id> | Stop/Start/Restart Docker Containers
 docker logs | Fetch the logs of a container
 
 
-### Commands most used arguments
+### Commands common arguments
 
 docker run | Options
 -|-
