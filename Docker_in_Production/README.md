@@ -29,12 +29,34 @@ not fully ready yet.
 
   - Most popular content or management service such as Google container engine and like `Google Container enginer` or `Amazon EC2` still use VMs internally.
 
-The simplest way to provision new VMS and containers on top up then is by using Docker Machine.
+The simplest way to provision new VMS and containers on top of then is by using Docker Machine.
+[Docker Machine](https://docs.docker.com/machine/overview/) is a tool that lets you install Docker Engine on virtual hosts, and manage the hosts with docker-machine commands.
+You can use Machine to create Docker hosts on your local Mac or Windows box, on your company network, in your data center, or on cloud providers like Azure, AWS, or Digital Ocean.
+Simply put docker machine can be used of orchestration
 Docker Machine can provision new volume's install `dockertools` on them and link docker client with remote docker machines.
 We can provision a VM on our local machine to do that. We need VirtualBox which is a virtualization technology that allows us to install multiple guest operating systems on a single machine.
 
+Each docker host setup by docker machine is a combination of:
+* docker host
+* docker client
+
+### Docker-machine 1
+![IMG](images/docker_machine.png)
+
+### Docker-machine 2
 ![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/docker_machine.png)
 
+
+### Difference between Docker CE and Docker Machine
+
+Docker-CE is a client-server application. The client interacts with the daemon using a REST API
+
+![IMG](images/docker_ce.png)
+
+Docker Machine is a tool for provisioning and managing your Dockerized hosts (hosts with Docker Engine on them). Typically, you install Docker Machine on your local system. Docker Machine has its own command line client docker-machine and the Docker Engine client, docker.
+Using docker-machine you cand deploy host containing docker-ce on virtual hosts(i.e, AWS,DigitalOcean etc, or locally)
+
+![IMG](images/docker_machine_deploy.png)
 
 ### Install Docker machine
 
