@@ -491,7 +491,8 @@ We can connect to the nginx service through a node which does NOT have nginx rep
   - All nodes listen for connections to published service ports.
   - When that service is called by external systems, the receiving node will accept the traffic and internally load balance it using an internal DNS service that Docker maintains.
 
-![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/ingress_load_balancing)
+![IMG](images/docker_swarm._replicas.png)
+
 
 Besides this we can specify the percentage of CPU to use per node, `RAM` and `restart_policy`.
 
