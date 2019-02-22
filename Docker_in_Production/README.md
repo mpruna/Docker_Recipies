@@ -642,3 +642,14 @@ ID                  NAME                        MODE                REPLICAS    
 aauncstdynhx        dockerapp_stack_dockerapp   replicated          2/2                 praslea/dockerapp:latest   *:4000->5000/tcp
 qnrf0oof832g        dockerapp_stack_redis       replicated          2/2                 redis:3.2.0   
 ```
+
+
+### Docker stack commands:
+
+|Command | Description| 
+|--- | ---|
+|docker stack deploy | Deploy a new stack or update an existing stack|
+|docker stack ls | List stacks|
+|docker stack ps | List the tasks in the stack|
+|docker stack rm | Remove one or more stacks|
+|docker stack services | List the services in the stack|
