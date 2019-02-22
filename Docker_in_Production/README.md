@@ -270,6 +270,25 @@ Options | Description
    --swarm-strategy "spread" | Define a default scheduling strategy for Swarm
    --tls-san [--tls-san option --tls-san option] | Support extra SANs for TLS certs
 
+### What is swarm
+
+A swarm consists of multiple Docker hosts which run in swarm mode and act as managers (to manage membership and delegation) and workers (which run swarm services). A given Docker host can be a manager, a worker, or perform both roles.
+
+### Nodes
+
+A node is an instance of the Docker engine participating in the swarm. You can also think of this as a Docker node. You can run one or more nodes on a single physical computer or cloud server, but production swarm deployments typically include Docker nodes distributed across multiple physical and cloud machines.
+To deploy your application to a swarm, you submit a service definition to a manager node. The manager node dispatches units of work called tasks to worker nodes.
+
+### Worker nodes
+
+Worker nodes receive and execute tasks dispatched from manager nodes. By default manager nodes also run services as worker nodes, but you can configure them to run manager tasks exclusively and be manager-only nodes.
+
+### Services and tasks
+
+A service is the definition of the tasks to execute on the manager or worker nodes. It is the central structure of the swarm system and the primary root of user interaction with the swarm.
+
+When you create a service, you specify which container image to use and which commands to execute inside running containers.
+
 ### Scale Docker for large applications
 
 A swarm is a group of machines that are running Docker and joined into a cluster. After that has happened, you continue to run the Docker commands you’re used to, but now they are executed on a cluster by a swarm manager. The machines in a swarm can be physical or virtual. After joining a swarm, they are referred to as nodes.
@@ -461,6 +480,9 @@ Docker publishes a port for a service. It does so by listening on that port acro
 
 ![IMG](https://github.com/mpruna/Docker_Recipies/blob/master/images/docker_swarm_config.png)
 
+### Swarm+Machine+Compose
+
+![IMG](images/docker_swarm2.jpg)
 
 ### Ingress load balancing:
 
