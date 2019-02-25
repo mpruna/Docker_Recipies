@@ -113,10 +113,10 @@ Cons:
 ### Fit Docker Technology into Continuous Integration(CI) Process
 
 What is Continuous Integration?
-  • Continuous integration is a software engineering practice in which
+  * Continuous integration is a software engineering practice in which
 isolated changes are immediately tested and reported when they are
 added to a larger code base.
-  • The goal of Continuous integration is to provide rapid feedback so that if
+  * The goal of Continuous integration is to provide rapid feedback so that if
 a defect is introduced into the code base, it can be identified and
 corrected as soon as possible.
 
