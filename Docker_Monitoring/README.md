@@ -38,3 +38,22 @@ CONTAINER ID        NAME                        CPU %               MEM USAGE / 
 8f1116e7f52c        dockerelk_logstash_1        3.58%               591.4MiB / 3.858GiB   14.97%              2.62kB / 2.07kB     5.32MB / 2.49MB     39
 aed251afb2cf        dockerelk_elasticsearch_1   5.50%               872.5MiB / 3.858GiB   22.09%              271kB / 167kB       0B / 266kB          59
 ```
+
+
+### Docker DNS
+
+Docker enables DNS inside it's containers by overlaying within a contaier 3 files:
+
+```buildoutcfg
+sh-4.2$ mount
+none on / type aufs (rw,relatime,si=98106b0eab546bd,dio,dirperm1)
+
+
+/dev/sda1 on /etc/resolv.conf type ext4 (rw,relatime,data=ordered)
+/dev/sda1 on /etc/hostname type ext4 (rw,relatime,data=ordered)
+/dev/sda1 on /etc/hosts type ext4 (rw,relatime,data=ordered)
+``` 
+
+
+References:
+* https://docs.docker.com/v17.09/engine/userguide/networking/de
